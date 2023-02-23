@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="set_var" doc:id="d702e2c1-25f9-4e68-997f-0d9342d8854c" >
+		<set-variable value="#[message.attributes.headers.transactionId]" doc:name="transationId" doc:id="212fe2db-00b4-4b73-8bec-75268f2f286d" variableName="transactionId"/>
+		<set-variable value="#[message.attributes.uriParams.serviceType]" doc:name="serviceType" doc:id="fa2e19fe-8f60-4e12-a7d4-06a8934b7bb4" variableName="serviceType"/>
+	
+</sub-flow>
+	<flow name="fastgo_system_flow" doc:id="8fe155b3-5097-4780-84f3-7ed1dfa6511d">
+		<http:listener doc:name="GET/travelontip" doc:id="371b6834-37d1-4ceb-9469-e3a1f74f979a" config-ref="HTTP_Listener_config" path="${http.listener.path}" allowedMethods="GET">
+			<http:response>
+				<http:headers><![CDATA[#[output application/json
+---
+{
+	transactionId : vars.transacitonId
+}]]]></http:headers>
+			</http:response>
+		
+			<http:error-response statusCode="#[vars.statusCode]">
+				<http:body><![CDATA[#[vars.errorMsg default "Critical Error"]]]></http:body>
+				<http:headers><![CDATA[#[output application/json
+---
+{
+	transactionId : vars.transactionId
+}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<flow-ref doc:name="setVar" doc:id="0cfb63ff-aa27-4348-9307-e18b79c10149" name="set_var" />
+		<logger level="INFO" doc:name="Logger" doc:id="06c4fb55-bdef-4a64-995d-bf2b82eb7909" message="Request Sent for FastGo System for Transaction Id: #[vars.transactionId]" />
+		<choice doc:name="Choice" doc:id="3b63d094-e592-4d66-9696-a899e38b99b1">
+			<when expression='#[vars.serviceType == "routes"]'>
+				<flow-ref doc:name="getRoutes" doc:id="3e16f6d2-0590-490f-868f-326b06bf9762" name="FastGo-GetRoutes" />
+			</when>
+			<when expression='#[vars.serviceType == "schedules"]'>
+				<flow-ref doc:name="getSchedules" doc:id="5cd7954a-1fdd-48a2-9f89-1e0983b36839" name="FastGo-GetSchedules" />
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Transform Message" doc:id="e2828b6b-5b70-4235-b5d6-bf7780a2d53b">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var text = if (isEmpty(vars.serviceType)) 
+	"no uri params"
+	else
+	"wrong uri params"
+---	
+{
+	message: text
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="d448ee69-adae-4b9b-a976-745bdf2f40d6" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e731d34e-fbc5-40ba-8e65-43c51310cc91">
+				<logger level="INFO" doc:name="Logger" doc:id="ffc55472-5f5a-4b0d-9335-62b0ecd5f1e4" />
+				<set-variable value="500" doc:name="statusCode" doc:id="25b88c4a-6e8a-42f2-9d2e-1182802b7114" variableName="statusCode" />
+				<set-variable value='#[message: "Error in TravelOnTip System"]' doc:name="errorMsg" doc:id="d5a00b65-4e9c-4678-a0b0-e61aa94b5a0d" variableName="errorMsg" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+
+</mule>

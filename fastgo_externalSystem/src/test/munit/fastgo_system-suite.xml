@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="travelontipapp-suite.xml" />
+	<munit:test name="fastgo_system_flow-routes-test" doc:id="c632bf68-6b5c-4dd4-9bb0-0bb7944e9cd1" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy getRoutes" doc:id="f9b9fef8-17d4-4cb4-91b6-7a26ce77d2f3" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3e16f6d2-0590-490f-868f-326b06bf9762" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="0dedfaef-b25b-4835-a6ae-5e3317cb7379" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowroutestest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="fc28f54c-28df-4778-88af-77827336b16b" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowroutestest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="0f6a4e61-54e6-4e34-b7e1-c7503d2a330d" >
+				<munit:payload value="#[readUrl('classpath://fastgosystemflowroutestest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://fastgosystemflowroutestest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to fastgo_system_flow" doc:id="54053f72-969f-4977-8fc7-0d538a9db411" name="fastgo_system_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="d937231f-0521-4ee2-afe8-9fe34f369993" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowroutestest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="52e74087-cf33-4278-a246-d34c2ee2424f" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="06c4fb55-bdef-4a64-995d-bf2b82eb7909" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify setVar" doc:id="0a6af481-70a0-450b-a07d-07aaeff3d134" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0cfb63ff-aa27-4348-9307-e18b79c10149" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="ac696bf7-cc83-4645-9cd5-e203574706b4" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d448ee69-adae-4b9b-a976-745bdf2f40d6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify getRoutes" doc:id="34bd5f2e-bbf6-4906-91ce-51aed092c45a" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3e16f6d2-0590-490f-868f-326b06bf9762" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="fastgo_system_flow-schedules-test" doc:id="1e6992da-7e3c-4737-9fbe-b3f4b6fc546c" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy getSchedules" doc:id="02d1872d-64f4-4425-85b1-e0f4cfedd2ae" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="5cd7954a-1fdd-48a2-9f89-1e0983b36839" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="9c29f008-fad0-46a3-adc5-ecbd6c7b9feb" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowschedulestest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="5882f5bc-30f9-4209-919e-a3748eb487d4" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowschedulestest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="e36e54cf-ebef-47ab-960d-96e34a2f8b7a" >
+				<munit:payload value="#[readUrl('classpath://fastgosystemflowschedulestest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://fastgosystemflowschedulestest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to fastgo_system_flow" doc:id="de2085b4-5dfb-4d8b-87a7-f071ee4c202e" name="fastgo_system_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="09b85275-597b-4203-8fa3-c47c01da5faa" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowschedulestest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="f4e538e1-85c6-49f1-82d9-47913625ca9d" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="06c4fb55-bdef-4a64-995d-bf2b82eb7909" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify setVar" doc:id="66e729f7-c785-49ad-aa3c-8b116ee3ff0f" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0cfb63ff-aa27-4348-9307-e18b79c10149" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="dd2b6e35-ae8f-4645-853f-3d2f51460dc1" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d448ee69-adae-4b9b-a976-745bdf2f40d6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify getSchedules" doc:id="ad051700-b9f2-4c93-b4ff-7a8812f07bcf" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="5cd7954a-1fdd-48a2-9f89-1e0983b36839" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="fastgo_system_flow-invalidURI-test" doc:id="8b3da180-0336-48a2-8dc5-787a0b53af00" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Transform Message" doc:id="c244cc19-ed12-48ba-8bbe-8f675564ef88" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e2828b6b-5b70-4235-b5d6-bf7780a2d53b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="bf33303f-7d59-4b1e-8a2e-11cb24760be6" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowinvalidURItest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="f448b740-b1e8-42dc-ac19-107517e78026" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowinvalidURItest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="7645b9e2-c582-40e6-8db0-31cf3b63950a" >
+				<munit:payload value="#[readUrl('classpath://fastgosystemflowinvalidURItest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://fastgosystemflowinvalidURItest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to fastgo_system_flow" doc:id="e8ea9c93-15cb-4541-a2c7-f76fd85cc50e" name="fastgo_system_flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="d625a213-8ff2-4c1a-8d67-ca348061a4e8" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import fastgosystemflowinvalidURItest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="16ca1875-e358-4d51-adab-22dc8e7ad2ff" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="06c4fb55-bdef-4a64-995d-bf2b82eb7909" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify setVar" doc:id="b3f1e19e-fa3f-4bbd-8f47-9a5eafe3c5ff" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0cfb63ff-aa27-4348-9307-e18b79c10149" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="b2717b54-2183-45a3-b331-f52e8842402b" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d448ee69-adae-4b9b-a976-745bdf2f40d6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="9674a9cb-2f6c-4382-8b62-1cc6af7076a3" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e2828b6b-5b70-4235-b5d6-bf7780a2d53b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
